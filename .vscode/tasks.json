@@ -2,9 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Rebuild Project",
+			"label": "Rebuild Debug Project",
 			"type": "shell",
-			"command": "flutter clean && flutter pub get && flutter build windows",
+			"command": "flutter clean && flutter pub get && flutter build windows --debug",
 			"args": [],
 			"isBackground": false,
 			"problemMatcher": [],
