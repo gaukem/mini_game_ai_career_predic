@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/member_screen_v3.dart';
-import 'screens/member_screen_v2.dart';
-import 'screens/member_screen_v1.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load environment variables from .env file
+  await dotenv.load(fileName: ".env");
+  
+  // Optional: Test API key (comment out after testing)
+  // await GeminiService.testApiKeyForModels(dotenv.env['GEMINI_API_KEY'] ?? '');
+  
   runApp(const MyApp());
 }
 

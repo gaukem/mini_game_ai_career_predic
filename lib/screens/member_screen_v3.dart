@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/member.dart';
+import 'package:mini_game_ai_career_predic/services/gemini_service.dart';
 
 class MemberScreenV3 extends StatefulWidget {
   const MemberScreenV3({super.key});
@@ -34,13 +35,21 @@ Future<void> _addMember() async {
     context: context,
     barrierDismissible: false,  // Không đóng khi nhấn bên ngoài
     builder: (context) {
-      return const PopScope(
+      return PopScope(
         canPop: false,  // Không cho phép back
         child: Center(
           child: Card(
+            color: Colors.white,  // Thêm màu nền trắng
             child: Padding(
-              padding: EdgeInsets.all(20),
-              child: CircularProgressIndicator(),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Đang xử lý...', style: TextStyle(fontSize: 16)),
+                ],
+              ),
             ),
           ),
         ),
@@ -49,17 +58,26 @@ Future<void> _addMember() async {
   );
 
   // GIẢ LẬP DELAY 3 GIÂY (thay bằng gọi API thực tế)
-  await Future.delayed(const Duration(seconds: 3));
+  //await Future.delayed(const Duration(seconds: 3));//daryl-test
+  try {
+  // Gọi Gemini API với timeout 30 giây
+  final suggestion = await GeminiService.suggestMajor(
+    name: name,
+    description: desc,
+  ).timeout(
+    const Duration(seconds: 30),
+    onTimeout: () {
+      throw Exception('Kết nối API quá lâu. Vui lòng kiểm tra mạng và thử lại.');
+    },
+  );
 
-  // KIỂM TRA WIDGET CÒN TỒN TẠI KHÔNG
   if (!mounted) return;
-
-  // ĐÓNG LOADING MODAL
-  Navigator.of(context).pop();
+  Navigator.of(context).pop();  // Đóng loading
 
   final newMember = Member(
     name: name,
-    description: desc.isEmpty ? 'Chưa có mô tả' : desc,
+    description: desc,
+    idealJob: suggestion,  // Lưu kết quả AI
   );
 
   setState(() {
@@ -68,6 +86,15 @@ Future<void> _addMember() async {
 
   _nameController.clear();
   _descController.clear();
+} catch (e) {
+  // Xử lý lỗi
+  if (mounted) {
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Lỗi: $e')),
+    );
+  }
+}
 }
 
   @override
@@ -140,7 +167,7 @@ Future<void> _addMember() async {
                                   child: Text(member.name[0].toUpperCase()),
                                 ),
                                 title: Text(member.name),
-                                subtitle: Text(member.description),
+                                subtitle: Text(member.description + ": " + (member.idealJob ?? 'Chưa có gợi ý')),
                               ),
                             ),
                         ],
