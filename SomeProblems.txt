@@ -1,7 +1,8 @@
 Some items:
-- Don't add Gemini API key to code, only to env at local
+- Place start run - entry point start
 - Check controls for display content return.
-- Check invalid Gemini API key
 - Build tasks.json, launch.json
 - How to debug, check value, call callstack
 - Some errors: Wrong version Gemini, miss control display answer, have to import class(file) before use.
+- Check invalid Gemini API key
+- Don't add Gemini API key to code, only to env at local
