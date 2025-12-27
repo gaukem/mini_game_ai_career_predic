@@ -23,6 +23,10 @@ Future<void> _addMember() async {
   final name = _nameController.text.trim();
   final desc = _descController.text.trim();
 
+  //daryl-test
+  debugPrint('Daryl test: $name');
+  debugPrint('Description: $desc');
+
   if (name.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Vui lòng nhập tên!')),

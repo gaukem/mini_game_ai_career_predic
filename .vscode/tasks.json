@@ -4,7 +4,7 @@
 		{
 			"label": "Rebuild Debug Project",
 			"type": "shell",
-			"command": "flutter clean && flutter pub get && flutter build windows --debug",
+			"command": "flutter clean ; flutter pub get ; flutter build windows --debug",
 			"args": [],
 			"isBackground": false,
 			"problemMatcher": [],
